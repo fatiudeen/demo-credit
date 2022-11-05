@@ -5,20 +5,19 @@ import { Knex } from 'knex';
 export async function up(knex: Knex) {
   return knex.schema
     .createTable('users', function (table) {
-      table.increments('id');
-      table.string('firstName');
-      table.string('lastName');
+      table.increments('id').primary();
+      table.string('firstname');
+      table.string('lastname');
       table.string('password');
-      table.string('email').unique();
-      table.integer('walletId');
-      table.timestamps();
+      table.string('username').unique();
+      table.integer('wallet');
+      table.timestamp('createdAt').defaultTo(knex.fn.now());
     })
     .createTable('wallets', function (table) {
-      table.increments('id');
-      table.string('balance');
-      table.text('externalAccount');
+      table.increments('id').primary();
+      table.integer('balance');
       table.text('history');
-      table.timestamps();
+      table.timestamp('createdAt').defaultTo(knex.fn.now());
     });
 }
 
