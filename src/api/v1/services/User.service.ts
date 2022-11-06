@@ -1,8 +1,8 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 import Service from '@services/service';
 import { IUser } from '@interfaces/User.interface';
-import { scrypt, randomBytes } from 'crypto';
-import { promisify } from 'util';
+import { scryptSync, randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 import { JWT_KEY } from '@config';
 import UserRepository from '@repositories/User.Repository';
@@ -10,80 +10,86 @@ import { IWallet } from '@interfaces/Wallet.interface';
 import WalletService from '@services/Wallet.service';
 
 class UserService extends Service<IUser> implements IUser {
-  protected model: 'users' | 'wallets' = 'users';
-  private scryptAsync = promisify(scrypt);
+  protected model: 'users' = 'users';
+  private scryptSync = scryptSync;
   protected repository = UserRepository;
   public id;
   public firstname;
   public lastname;
-  private _password;
-  public email;
-  public wallet;
+  public password;
+  public username;
+  public wallet = 0;
+  private user?;
 
-  constructor(user: IUser) {
+  constructor(user: IUser, trailingProperties = false) {
     super();
     this.id = user.id || null;
     this.firstname = user.firstname;
     this.lastname = user.lastname;
-    this._password = user.password;
-    this.email = user.email;
-    this.wallet = user.walletId;
-  }
-
-  set password(value: string) {
-    this._password = value;
-    (async () => {
-      this._password = await this.toHash();
-    })();
+    this.password = this.toHash(user.password);
+    this.username = user.username;
+    this.wallet = user.wallet!;
+    this.user = { ...user, wallet: this.wallet };
+    if (!trailingProperties) {
+      delete this.user;
+      delete (<any>this).model;
+      delete (<any>this).repository;
+    }
   }
 
   get fullname() {
     return `${this.firstname} ${this.lastname}`;
   }
 
-  private toHash = async () => {
+  private toHash(password: string) {
     const salt = randomBytes(8).toString('hex');
-    const buf = <Buffer>await this.scryptAsync(this._password, salt, 64);
+    const buf = <Buffer>this.scryptSync(password, salt, 64);
     return `${buf.toString('hex')}.${salt}`;
-  };
+  }
 
-  generateToken = () => {
+  generateToken() {
     const token = jwt.sign(<string>(<unknown>this.id), <string>JWT_KEY);
     return token;
-  };
+  }
 
-  compare = async (password: string) => {
-    const [hashPassword, salt] = this._password.split('.');
-    const buf = <Buffer>await this.scryptAsync(password, salt, 64);
+  compare(password: string) {
+    const [hashPassword, salt] = this.password.split('.');
+    const buf = <Buffer>this.scryptSync(password, salt, 64);
     return buf.toString('hex') === hashPassword;
-  };
+  }
 
   async save() {
-    const user = await this.repository.create(this);
+    let user;
+    if (this.id) {
+      user = await this.repository.update(this.id, this.user!);
+    } else {
+      const wallet = await WalletService.create();
+
+      user = await this.repository.create({ ...this.user!, wallet: wallet.id });
+    }
     return new UserService(user);
   }
 
   update(data: Partial<IUser>) {
-    return this.repository.update(<string>(<unknown>this.id), data);
+    return this.repository.update(this.id!, data);
   }
 
   delete() {
-    return this.repository.delete(<string>(<unknown>this.id));
+    return this.repository.delete(this.id!);
   }
 
   async myWallet() {
-    if (typeof this.wallet === 'string') {
-      this.wallet = await WalletService.findOne(this.wallet);
-      delete this.wallet.history;
-    }
-    return this;
+    if (this.wallet < 1) return this;
+    const wallet = await WalletService.findOne(this.wallet!);
+    const result = <Partial<IWallet>>JSON.parse(JSON.stringify(wallet));
+    delete result.history;
+    return { ...this, wallet: result };
   }
 
   async myHistory() {
-    if (typeof this.wallet === 'string') {
-      this.wallet = await WalletService.findOne(this.wallet);
-    }
-    return <IWallet['history']>this.wallet.history;
+    const wallet = await WalletService.findOne(this.wallet);
+    if (!wallet) return <IWallet['history']>[];
+    return wallet.history;
   }
 
   static async find() {
@@ -93,22 +99,23 @@ class UserService extends Service<IUser> implements IUser {
     });
   }
 
-  static async findOne(query: string | Partial<IUser>) {
+  static async findOne(query: number | Partial<IUser>) {
     const user = await UserRepository.findOne(query);
     if (user) return new UserService(user);
     return null;
   }
 
-  static delete(data: string | Partial<IUser>) {
+  static delete(data: number | Partial<IUser>) {
     return UserRepository.delete(data);
   }
 
-  static update(query: string | Partial<IUser>, data: Partial<IUser>) {
+  static update(query: number | Partial<IUser>, data: Partial<IUser>) {
     return UserRepository.update(query, data);
   }
 
-  static create(data: IUser) {
-    return UserRepository.create(data);
+  static async create(data: IUser) {
+    const user = new UserService(data, true);
+    return user.save();
   }
 }
 
