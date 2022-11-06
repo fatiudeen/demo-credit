@@ -9,7 +9,9 @@ if (process.env.NODE_ENV === 'local') {
 export const { PORT, DOCS, JWT_KEY, JWT_TIMEOUT } = process.env;
 
 export const MESSAGES = {
-  INTERNAL_SERVER_ERROR: 'Internal Server Error. Please try again!',
+  INTERNAL_SERVER_ERROR: 'Internal Server Error',
+  BAD_REQUEST_ERROR: 'Bad Request Error',
+  DB_ERROR: 'database not responding. please try again',
   INVALID_CREDENTIALS: 'Invalid Credentials',
   WELCOME: 'WELCOME TO DEMO-CREDIT',
   LOGIN_SUCCESS: 'Login Success',

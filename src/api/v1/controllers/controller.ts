@@ -9,35 +9,21 @@ export default abstract class Controller<T extends IUser | IWallet> {
   protected service;
   protected HttpError = httpError;
   protected HttpResponse = httpResponse;
-  private resource;
-  private resourceId;
-  constructor(service: IService, resource: string) {
+  constructor(service: IService) {
     this.service = service;
-    this.resource = resource;
-    this.resourceId = `${resource}Id`;
   }
 
   static Controller() {
     return (target: Object, value: string, descriptor: PropertyDescriptor) => {
       const originalMethod = descriptor.value;
-      // eslint-disable-next-line func-names
-      // descriptor.value = async function (req: Request, res: Response, next: NextFunction) {
-      //   try {
-      //     const result = await originalMethod(req);
-      //     httpResponse.send(res, result);
-      //   } catch (error) {
-      //     next(error);
-      //   }
-      // };
       descriptor.value = async (req: Request, res: Response, next: NextFunction) => {
         try {
-          const result = await originalMethod(req);
+          const result = await originalMethod.call(target.constructor(), req);
           httpResponse.send(res, result);
         } catch (error) {
           next(error);
         }
       };
-      // return descriptor;
     };
   }
 }
