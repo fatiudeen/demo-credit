@@ -33,8 +33,8 @@ export default abstract class Repository<T extends IUser | IWallet> {
   }
 
   async create(data: Partial<T>) {
-    await knex<T>(this.model).insert(<any>data);
-    return this.findOne(data);
+    const result = await knex<T>(this.model).insert(<any>data);
+    return this.findOne(result[0]);
   }
 
   async delete(data: number | Partial<T>) {
