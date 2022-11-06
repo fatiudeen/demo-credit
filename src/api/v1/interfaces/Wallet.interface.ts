@@ -19,12 +19,12 @@ export interface IWallet {
   id: number | null;
   balance: number;
   history: Array<OmitNever<Transactions<'credit'>> | OmitNever<Transactions<'debit'>>>;
-  fund(amount: number): OmitNever<Transactions<'credit'>>;
-  transfer(amount: number, userId: string): Promise<OmitNever<Transactions<'debit'>>>;
-  withdraw(
-    amount: number,
-    accountNumber: number,
-    accountName: string,
-  ): OmitNever<Transactions<'debit'>>;
+  // fund(amount: number): OmitNever<Transactions<'credit'>>;
+  // transfer(amount: number, userId: string): Promise<OmitNever<Transactions<'debit'>>>;
+  // withdraw(
+  //   amount: number,
+  //   accountNumber: number,
+  //   accountName: string,
+  // ): OmitNever<Transactions<'debit'>>;
   [key: string]: any;
 }
