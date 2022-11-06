@@ -18,7 +18,7 @@
       "@controllers/*": ["src/api/v1/controllers/*"],
       "@middlewares/*": ["src/api/v1/middlewares/*"],
       "@dtos/*": ["src/api/v1/dtos/*"],
-      "@interfaces/*": ["src/api/v1/interfaces/*"],
+      "@interfaces/*": ["src/api/v1/interfaces/*"]
       },                      
     "typeRoots": [ 
       "./node_modules/@types",
@@ -32,7 +32,7 @@
   },
   "tsc-alias": {
     "verbose": false,
-    "resolveFullPaths": true,
+    "resolveFullPaths": true
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
