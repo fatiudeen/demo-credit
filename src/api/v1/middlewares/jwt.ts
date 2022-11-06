@@ -24,20 +24,15 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
     if (!token) {
       throw new httpError(MESSAGES.UNAUTHORIZED, 401);
     }
+    const decoded = <string>(<unknown>jwt.verify(token, <string>JWT_KEY));
+    const user = await UserService.findOne(parseInt(decoded, 10));
 
-    try {
-      const decoded = <IUser>jwt.verify(token, <string>JWT_KEY);
-      const user = await UserService.findOne(<string>(<unknown>decoded.id));
-
-      if (!user) {
-        throw new httpError(MESSAGES.UNAUTHORIZED, 401);
-      }
-
-      req.user = user;
-      return next();
-    } catch (error) {
-      next(error);
+    if (!user) {
+      throw new httpError(MESSAGES.UNAUTHORIZED, 401);
     }
+
+    req.user = user;
+    return next();
   } catch (error) {
     next(error);
   }
