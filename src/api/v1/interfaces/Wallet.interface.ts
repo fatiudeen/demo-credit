@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 export type OmitNever<T> = { [K in keyof T as T[K] extends never ? never : K]: T[K] };
 
 export type Transactions<T extends 'credit' | 'debit'> = {
@@ -13,18 +12,9 @@ export type Transactions<T extends 'credit' | 'debit'> = {
   desc: string;
 };
 
-// export type Transactions<T extends 'credit' | 'debit'> = OmitNever<NeverTransactions<T>>;
-
 export interface IWallet {
   id: number | null;
   balance: number;
   history: Array<OmitNever<Transactions<'credit'>> | OmitNever<Transactions<'debit'>>>;
-  // fund(amount: number): OmitNever<Transactions<'credit'>>;
-  // transfer(amount: number, userId: string): Promise<OmitNever<Transactions<'debit'>>>;
-  // withdraw(
-  //   amount: number,
-  //   accountNumber: number,
-  //   accountName: string,
-  // ): OmitNever<Transactions<'debit'>>;
   [key: string]: any;
 }

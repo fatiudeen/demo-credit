@@ -5,8 +5,6 @@ class WalletService extends Repository<IWallet> {
   protected model: 'users' | 'wallets' = 'wallets';
   async update(_query: number | Partial<IWallet>, data: Partial<IWallet>) {
     const query = this.seralizeId(_query);
-    console.log(JSON.stringify(data.history));
-
     const id = await this.db<IWallet>(this.model)
       .where(query)
       .update(<any>{

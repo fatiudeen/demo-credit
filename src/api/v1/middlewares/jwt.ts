@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable new-cap */
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import httpError from '@helpers/HttpError';

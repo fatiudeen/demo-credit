@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-/* eslint-disable no-underscore-dangle */
 import Service from '@services/service';
 import { IUser } from '@interfaces/User.interface';
 import { scryptSync, randomBytes } from 'crypto';
@@ -83,13 +81,18 @@ class UserService extends Service<IUser> implements IUser {
     const wallet = await WalletService.findOne(this.wallet!);
     const result = <Partial<IWallet>>JSON.parse(JSON.stringify(wallet));
     delete result.history;
+    delete result.repository;
+    delete result.model;
+    delete result.wallet;
     return { ...this, wallet: result };
   }
 
   async myHistory() {
     const wallet = await WalletService.findOne(this.wallet);
     if (!wallet) return <IWallet['history']>[];
-    return wallet.history;
+    return wallet.history.sort((a: any, b: any) => {
+      return parseInt(b.id.split('_')[1], 10) - parseInt(a.id.split('_')[1], 10);
+    });
   }
 
   static async find() {

@@ -1,4 +1,3 @@
-/* eslint-disable object-curly-newline */
 import type { Knex } from 'knex';
 import { config } from 'dotenv';
 
@@ -6,7 +5,6 @@ if (process.env.NODE_ENV === 'local') {
   config({ path: `../../.env.${process.env.NODE_ENV}` });
 } else config({ path: '../../.env' });
 
-// eslint-disable-next-line object-curly-newline
 export const { PORT, DB_HOST, DB_NAME, DB_USER, DB_PASSWORD, DB_PORT, DOCS, JWT_KEY, JWT_TIMEOUT } =
   process.env;
 const knexConfig: Knex.Config = {

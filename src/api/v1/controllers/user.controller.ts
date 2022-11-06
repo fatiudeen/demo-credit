@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { Request, Response, NextFunction } from 'express';
 import { logger } from '@utils/logger';
 import Controller from '@controllers/controller';

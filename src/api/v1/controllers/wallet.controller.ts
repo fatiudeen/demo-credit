@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { Request, Response, NextFunction } from 'express';
 import WalletService from '@services/Wallet.service';
 import Controller from '@controllers/controller';
@@ -23,8 +22,7 @@ class RequestController extends Controller<IWallet> {
       if (!wallet) throw new this.HttpError(MESSAGES.INVALID_RECORD, 400);
 
       const result = wallet.fund(parseInt(req.body.amount, 10));
-      const x = await wallet.save();
-      console.log(x);
+      await wallet.save();
 
       if (!result.success) {
         throw new this.HttpError(result.desc, 400, result);
@@ -53,6 +51,7 @@ class RequestController extends Controller<IWallet> {
       const result = await wallet.transfer(
         parseInt(req.body.amount, 10),
         parseInt(req.body.userId, 10),
+        user.fullname,
       );
       await wallet.save();
 

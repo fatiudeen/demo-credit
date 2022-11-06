@@ -24,6 +24,7 @@ export const MESSAGES = {
   DEMO_WALLET: 'demo wallet loan service',
   FUNDED: 'account funded',
   TRANSFERED: 'fund transfered',
+  RECIEVED: 'fund recieved',
   USER_DOES_NOT_EXISTS: 'user does not exists',
   RECIEVER_DOES_NOT_EXISTS: 'the user you are trying to fund does not exists',
   INVALID_RECORD: 'record does not exist',

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Request } from 'express';
 import { IUser } from '@interfaces/User.interface';
 

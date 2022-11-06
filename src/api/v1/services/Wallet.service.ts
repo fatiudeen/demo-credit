@@ -22,9 +22,6 @@ class WalletService extends Service<IWallet> implements IWallet {
       delete this.wallet;
       delete (<any>this).model;
       delete (<any>this).repository;
-      // delete (<any>this).wallet.repository;
-      // delete (<any>this).wallet.repository;
-      // delete (<any>this).wallet.wallet;
     }
   }
 
@@ -56,7 +53,7 @@ class WalletService extends Service<IWallet> implements IWallet {
     this.save();
     return transaction;
   }
-  public async transfer(amount: number, userId: number) {
+  public async transfer(amount: number, userId: number, sender: string) {
     const transaction: OmitNever<Transactions<'debit'>> = {
       id: this.uniqueId,
       success: true,
@@ -70,19 +67,38 @@ class WalletService extends Service<IWallet> implements IWallet {
 
     const user = await UserService.findOne(userId);
     if (!user) {
-      this.history.push(transaction);
-      return { ...transaction, success: false, desc: MESSAGES.RECIEVER_DOES_NOT_EXISTS };
+      const _transaction = {
+        ...transaction,
+        success: false,
+        desc: MESSAGES.RECIEVER_DOES_NOT_EXISTS,
+      };
+      this.history.push(_transaction);
+      return _transaction;
     }
     transaction.to = user.fullname;
 
     if (this.balance < amount) {
-      this.history.push(transaction);
-      return { ...transaction, success: false, desc: MESSAGES.INSUFFICENT_BALANCE };
+      const _transaction = { ...transaction, success: false, desc: MESSAGES.INSUFFICENT_BALANCE };
+      this.history.push(_transaction);
+      return _transaction;
     }
     const recieverWallet = await WalletService.findOne(user.wallet);
 
     this.deduct = amount;
+    transaction.balance = this.balance;
     recieverWallet!.topUp = amount;
+    const recieverTransaction: OmitNever<Transactions<'credit'>> = {
+      id: transaction.id,
+      success: true,
+      type: 'credit',
+      amount,
+      date: new Date().toUTCString(),
+      balance: recieverWallet!.balance + amount,
+      from: sender,
+      desc: MESSAGES.RECIEVED,
+    };
+    recieverWallet!.history.push(recieverTransaction);
+    await recieverWallet!.save();
 
     this.history.push(transaction);
     return transaction;
@@ -140,14 +156,6 @@ class WalletService extends Service<IWallet> implements IWallet {
     if (wallet) return new WalletService(wallet, true);
     return null;
   }
-
-  // static delete(data: number | Partial<IWallet>) {
-  //   return WalletRepository.delete(data);
-  // }
-
-  // static update(query: number | Partial<IWallet>, data: Partial<IWallet>) {
-  //   return WalletRepository.update(query, data);
-  // }
 
   static create() {
     const data: Partial<IWallet> = {

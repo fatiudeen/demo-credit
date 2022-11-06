@@ -26,8 +26,17 @@
       "prefer-destructuring": "off",
       "no-param-reassign": "off",
       "keyword-spacing": "off",
-      "class-methods-use-this": "off"
-    },
+      "class-methods-use-this": "off",
+      "object-curly-newline": 0,
+      "import/prefer-default-export": 0,
+      "consistent-return":0,
+      "underscore-dangle": 0,
+      "no-underscore-dangle": 0,
+      "no-unused-vars": 0,
+      "new-cap": 0,
+      "indent": 0
+
+      },
     "settings": {
         "import/resolver": {
           "typescript": {},

@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable no-unused-vars */
 import { Request, Response, NextFunction } from 'express';
 import HttpError from '@helpers/HttpError';
 
