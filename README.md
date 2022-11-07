@@ -20,6 +20,7 @@
 
 <li><a  href="#technologies-used">Stack Used</a></li>
 <li><a  href="#design-pattern">Design Pattern</a></li>
+<li><a  href="#e-r-diagram">E-R Diagram</a></li>
 <li><a  href="#contact">Contact</a></li>
 
 
@@ -148,6 +149,14 @@ The following are the notable designs that have were used for developing this se
 
 ---
 
+### E-R Diagram
+
+![e-r diagram](./E-R-diagram.png)
+
+
+
+---
+
   <!-- CONTACT -->
 
 ## Contact
@@ -157,6 +166,7 @@ The following are the notable designs that have were used for developing this se
 *   Shehu-Fatiudeen Oluwaseun Lawal 
 *   [Mail](mailto:shehufatiudeen@gmail.com)
 *   [LinkedIn](https://linkedin.com/in/fatiudeen/)
-*   Twitter: [@fatiudeen_](https://twitter.com/fatiudeen_)
+*   [Twitter](https://twitter.com/fatiudeen_)
+*   [Whatsapp](https://wa.me/2348061316131)
 
 :scroll: **END**
