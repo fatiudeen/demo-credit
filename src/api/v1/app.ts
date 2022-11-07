@@ -25,7 +25,7 @@ class App {
     this.app.use('/api/v1/wallets', verify, walletRoute.initRoutes());
     this.app.use('/docs', docs);
     this.app.use('/api/v1/', authRoute.initRoutes());
-    this.app.use('/', (req, res) => {
+    this.app.get('/', (req, res) => {
       res.send(MESSAGES.WELCOME);
     });
   }
@@ -42,7 +42,7 @@ class App {
 
   private initErrorHandlers() {
     this.app.use(httpErrorHandler);
-    this.app.use(error404);
+    this.app.use('*', error404);
   }
 
   public listen(port: number) {
