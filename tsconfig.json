@@ -18,7 +18,8 @@
       "@controllers/*": ["src/api/v1/controllers/*"],
       "@middlewares/*": ["src/api/v1/middlewares/*"],
       "@dtos/*": ["src/api/v1/dtos/*"],
-      "@interfaces/*": ["src/api/v1/interfaces/*"]
+      "@interfaces/*": ["src/api/v1/interfaces/*"],
+      "@mocks/*": ["src/api/v1/__test__/mocks/*"]
       },                      
     "typeRoots": [ 
       "./node_modules/@types",

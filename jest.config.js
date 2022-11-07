@@ -7,9 +7,9 @@ module.exports = {
   testEnvironment: 'node',
   verbose: true,
   clearMocks: true,
-  modulePathIgnorePatterns: ['./dist'],
+  modulePathIgnorePatterns: ['./src/api/v1/__test__/mocks', './dist'],
   moduleDirectories: ['node_modules', 'src'],
   modulePaths: [compilerOptions.baseUrl],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
-  // setupFilesAfterEnv: ['./src/v1/api/__tests__/__mocks__/mock.ts'],
+  setupFilesAfterEnv: ['./src/api/v1/__test__/mocks/mockRepository.ts'],
 };
