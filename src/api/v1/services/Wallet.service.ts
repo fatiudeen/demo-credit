@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import Service from '@services/service';
 import { IWallet, Transactions, OmitNever } from '@interfaces/Wallet.interface';
 import WalletRepository from '@repositories/Wallet.Repository';
@@ -16,7 +17,11 @@ class WalletService extends Service<IWallet> implements IWallet {
     super();
     this.id = wallet.id || null;
     this.balance = wallet.balance || 0;
-    this.history = JSON.parse(<string>(<unknown>wallet.history)) || [];
+    this.history = wallet.history
+      ? typeof wallet.history === 'string'
+        ? JSON.parse(<string>(<unknown>wallet.history))
+        : wallet.history
+      : [];
     this.wallet = wallet;
     if (!trailingProperties) {
       delete this.wallet;
